@@ -51,6 +51,19 @@ EXPOSE 80
 # Копируем конфигурационные файлы
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY start.sh /start.sh
+COPY matecat-config.ini /tmp/matecat-config.ini
+COPY nodejs-config.ini /tmp/nodejs-config.ini
+COPY apache-matecat.conf /tmp/apache-matecat.conf
+
 RUN chmod +x /start.sh
+
+# Настраиваем PHP
+RUN echo "short_open_tag = On" >> /etc/php/7.4/apache2/php.ini && \
+    echo "memory_limit = 1024M" >> /etc/php/7.4/apache2/php.ini && \
+    echo "short_open_tag = On" >> /etc/php/7.4/cli/php.ini && \
+    echo "memory_limit = 1024M" >> /etc/php/7.4/cli/php.ini
+
+# Включаем модуль mcrypt
+RUN phpenmod mcrypt || true
 
 CMD ["/start.sh"]
