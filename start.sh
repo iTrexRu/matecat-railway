@@ -57,6 +57,19 @@ su - matecat -c "cd ~/matecat/inc && cp oauth_config.ini.sample oauth_config.ini
 su - matecat -c "cd ~/matecat/inc && cp task_manager_config.ini.sample task_manager_config.ini"
 su - matecat -c "cd ~/matecat/inc && cp Error_Mail_List.ini.sample Error_Mail_List.ini"
 
+# Копируем наши конфигурационные файлы
+cp /tmp/matecat-config.ini /home/matecat/matecat/inc/config.ini
+cp /tmp/nodejs-config.ini /home/matecat/matecat/nodejs/config.ini
+cp /tmp/apache-matecat.conf /etc/apache2/sites-available/matecat.conf
+
+# Включаем сайт Apache
+a2ensite matecat.conf
+a2dissite 000-default.conf
+
+# Настраиваем права доступа
+chown -R matecat:matecat /home/matecat/matecat
+chown -R www-data:www-data /home/matecat/matecat/storage
+
 echo "Setup completed. Starting services..."
 
 # Запускаем supervisor
